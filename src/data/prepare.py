@@ -26,22 +26,19 @@ from sklearn.impute import SimpleImputer
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-path_train',
+    parser.add_argument('-path_origin',
                  action="store",
                  dest="path_train",
                  required=True)
-    parser.add_argument('-x_train',
+    parser.add_argument('-path_prepared',
                  action="store",
                  dest="x_train",
                  required=True)
-    parser.add_argument('-y_train',
-                 action="store",
-                 dest="y_train")
     args = parser.parse_args()
     return args
 
 
-def make_train(path_file: str) -> (pd.DataFrame, pd.DataFrame):
+def prepare(path_file: str) -> (pd.DataFrame, pd.DataFrame):
    
     train = pd.read_csv(path_file)
 
@@ -80,8 +77,8 @@ def make_train(path_file: str) -> (pd.DataFrame, pd.DataFrame):
     return train, y
 
 args = get_args()
-x_train, y_train = make_train(args.path_train)
+x_train, y_train = prepare(args.path_train)
 
 os.makedirs(os.path.join(args.x_train.split('/')[0], args.x_train.split('/')[1]), exist_ok=True)
-x_train.to_csv(args.x_train, index=False)
-y_train.to_csv(args.y_train, index=False)
+x_train.to_csv(f"{args.x_train}/data.csv", index=False)
+y_train.to_csv(f"{args.x_train}/target.csv", index=False)

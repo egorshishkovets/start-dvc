@@ -47,10 +47,6 @@ def eval_metrics(actual, pred):
     return exp_metrics
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-x_train',
-                 action="store",
-                 dest="x_train",
-                 required=True)
     parser.add_argument('-x_test',
                  action="store",
                  dest="x_test",
@@ -62,11 +58,11 @@ def get_args():
     parser.add_argument('-path_pkl',
                  action="store",
                  dest="path_pkl")
-    parser.add_argument('-scores',
+    parser.add_argument('-scores_path',
                  action="store",
                  dest="scores",
                  required=True)
-    parser.add_argument('-plot',
+    parser.add_argument('-plot_path',
                  action="store",
                  dest="plot",
                  required=True)
@@ -74,7 +70,6 @@ def get_args():
     return args
 
 args = get_args()
-x_train = pd.read_csv(args.x_train)
 x_test = pd.read_csv(args.x_test)
 y_test = pd.read_csv(args.y_test)
 plot_json = {}

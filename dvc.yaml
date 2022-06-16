@@ -1,0 +1,55 @@
+stages:
+  prepare:
+    cmd: python src/data/prepare.py -path_origin=data/raw/train.csv -path_prepared=data/prepare/
+    deps:
+    - data/raw/train.csv
+    - src/data/prepare.py
+    outs:
+    - data/prepare/data.csv
+    - data/prepare/target.csv
+  split:
+    cmd: python src/data/split.py -x_train=data/prepare/data.csv -y_train=data/prepare/target.csv -path_out=data/prepare/
+    deps:
+    - data/prepare/data.csv
+    - data/prepare/target.csv
+    - src/data/split.py
+    outs:
+    - data/prepare/x_train.csv
+    - data/prepare/y_train.csv
+    - data/prepare/x_test.csv
+    - data/prepare/y_test.csv
+  train_regression:
+    cmd: python src/models/logistic_regression.py 
+      -x_train=data/prepare/x_train.csv 
+      -y_train=data/prepare/y_train.csv 
+      -path_pkl=data/models/logistic_regression.pkl
+    deps:
+    - data/prepare/x_train.csv 
+    - data/prepare/y_train.csv
+    - src/models/logistic_regression.py
+    params:
+    - train_logistic.random_state
+    - train_logistic.max_iter
+    - train_logistic.n_jobs
+    outs:
+    - data/models/logistic_regression.pkl
+  evaluate:
+    cmd: python src/models/evaluate.py 
+      -x_test=data/prepare/x_test.csv 
+      -y_test=data/prepare/y_test.csv 
+      -path_pkl=data/models/logistic_regression.pkl
+      -scores_path=reports/scores.json
+      -plot_path=reports/plot.json
+    deps:
+    - data/prepare/x_test.csv
+    - data/prepare/y_test.csv
+    - data/models/logistic_regression.pkl
+    - src/models/evaluate.py
+    metrics:
+    - reports/scores.json:
+        cache: false
+    plots:
+    - reports/plot.json:
+        cache: false
+        x: False_Positive_Rate
+        y: True_Positive_Rate
