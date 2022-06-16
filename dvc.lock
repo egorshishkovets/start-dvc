@@ -57,21 +57,21 @@ stages:
       size: 1908
     params:
       params.yaml:
-        train_logistic.max_iter: 100
+        train_logistic.max_iter: 1000
         train_logistic.n_jobs: -1
         train_logistic.random_state: 45
     outs:
     - path: data/models/logistic_regression.pkl
-      md5: 6ce8a4820454a03ac939c0da64a1e8bf
-      size: 794
+      md5: 1b4d2cf63ed4cbc213e29d715ad98065
+      size: 795
   evaluate:
     cmd: python src/models/evaluate.py -x_test=data/prepare/x_test.csv -y_test=data/prepare/y_test.csv
       -path_pkl=data/models/logistic_regression.pkl -scores_path=reports/scores.json
       -plot_path=reports/plot.json
     deps:
     - path: data/models/logistic_regression.pkl
-      md5: 6ce8a4820454a03ac939c0da64a1e8bf
-      size: 794
+      md5: 1b4d2cf63ed4cbc213e29d715ad98065
+      size: 795
     - path: data/prepare/x_test.csv
       md5: cb5ca849e2fc0275e792fae6dee55e15
       size: 11795
