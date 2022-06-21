@@ -4,18 +4,18 @@ stages:
     cmd: python src/data/prepare.py -path_origin=data/raw/train.csv -path_prepared=data/prepare/
     deps:
     - path: data/raw/train.csv
-      md5: 61fdd54abdbf6a85b778e937122e1194
-      size: 61194
+      md5: 66842231faa870455147df41a65fc39d
+      size: 61131
     - path: src/data/prepare.py
       md5: f78975ea10f96588f70b3251af6478b3
       size: 2743
     outs:
     - path: data/prepare/data.csv
-      md5: 5e8119fcf444111a4a422fb95026629e
-      size: 47005
+      md5: 9d527ab4eaaa4379c49dd51873bf9e88
+      size: 46951
     - path: data/prepare/target.csv
-      md5: 97ad279081204a182620d6bf8ccb4230
-      size: 1791
+      md5: 4bb304ede3e94ccf92bb038e847b4436
+      size: 1789
   split:
     cmd: python src/data/split.py -x_train=data/prepare/data.csv -y_train=data/prepare/target.csv
       -path_out=data/prepare/
@@ -57,12 +57,12 @@ stages:
       size: 1908
     params:
       params.yaml:
-        train_logistic.max_iter: 20
+        train_logistic.max_iter: 1
         train_logistic.n_jobs: -1
-        train_logistic.random_state: 42
+        train_logistic.random_state: 4
     outs:
     - path: data/models/logistic_regression.pkl
-      md5: 104397049092263ed5239e5d39bfc2e0
+      md5: 17398cec94b887f854e679bd397406cf
       size: 794
   evaluate:
     cmd: python src/models/evaluate.py -x_test=data/prepare/x_test.csv -y_test=data/prepare/y_test.csv
@@ -70,7 +70,7 @@ stages:
       -plot_path=reports/plot.json
     deps:
     - path: data/models/logistic_regression.pkl
-      md5: 104397049092263ed5239e5d39bfc2e0
+      md5: 17398cec94b887f854e679bd397406cf
       size: 794
     - path: data/prepare/x_test.csv
       md5: cb5ca849e2fc0275e792fae6dee55e15
@@ -83,8 +83,8 @@ stages:
       size: 2954
     outs:
     - path: reports/plot.json
-      md5: 6bc0193155e4a0aab7f706f07b95ac48
-      size: 6311
+      md5: bb64c17188f6d3077cafd79a614d2e6e
+      size: 6860
     - path: reports/scores.json
-      md5: 899091fa118503d989ca3d693296e6a4
-      size: 84
+      md5: 425e5b7305cfcbc6ec3e07d1459ae71e
+      size: 82
