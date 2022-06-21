@@ -2,13 +2,14 @@ schema: '2.0'
 stages:
   prepare:
     cmd: python src/data/prepare.py -path_origin=data/raw/train.csv -path_prepared=data/prepare/
+      -data_metrics=reports/data_params_regression.json
     deps:
     - path: data/raw/train.csv
       md5: 66842231faa870455147df41a65fc39d
       size: 61131
     - path: src/data/prepare.py
-      md5: f78975ea10f96588f70b3251af6478b3
-      size: 2743
+      md5: 490f87d3be1048301bd71b343ff6bdc4
+      size: 3079
     outs:
     - path: data/prepare/data.csv
       md5: 9d527ab4eaaa4379c49dd51873bf9e88
@@ -16,42 +17,45 @@ stages:
     - path: data/prepare/target.csv
       md5: 4bb304ede3e94ccf92bb038e847b4436
       size: 1789
+    - path: reports/data_params_regression.json
+      md5: c81e728d9d4c2f636f067f89cc14862c
+      size: 1
   split:
     cmd: python src/data/split.py -x_train=data/prepare/data.csv -y_train=data/prepare/target.csv
       -path_out=data/prepare/
     deps:
     - path: data/prepare/data.csv
-      md5: 5e8119fcf444111a4a422fb95026629e
-      size: 47005
+      md5: 9d527ab4eaaa4379c49dd51873bf9e88
+      size: 46951
     - path: data/prepare/target.csv
-      md5: 97ad279081204a182620d6bf8ccb4230
-      size: 1791
+      md5: 4bb304ede3e94ccf92bb038e847b4436
+      size: 1789
     - path: src/data/split.py
       md5: 60dfb752883a60156778be6f59db5d5e
       size: 1662
     outs:
     - path: data/prepare/x_test.csv
-      md5: cb5ca849e2fc0275e792fae6dee55e15
-      size: 11795
+      md5: 59b9904900bc7857fdd289065b01e10e
+      size: 11753
     - path: data/prepare/x_train.csv
-      md5: d9efc70af923d330075a36a57ac9f0be
-      size: 35023
+      md5: 9e6a6272b6dc8c599fdb294cb4ff2a11
+      size: 35012
     - path: data/prepare/y_test.csv
-      md5: 7e71c744a293357f27168745b1f03ebe
+      md5: 44af50016fddb1b00ec2b7a56c0778f4
       size: 455
     - path: data/prepare/y_train.csv
-      md5: b36631bdbb8580707bae861373742a95
-      size: 1345
+      md5: 7de8f31e9d854aee7616e53a209fb941
+      size: 1343
   train_regression:
     cmd: python src/models/logistic_regression.py -x_train=data/prepare/x_train.csv
       -y_train=data/prepare/y_train.csv -path_pkl=data/models/logistic_regression.pkl
     deps:
     - path: data/prepare/x_train.csv
-      md5: d9efc70af923d330075a36a57ac9f0be
-      size: 35023
+      md5: 9e6a6272b6dc8c599fdb294cb4ff2a11
+      size: 35012
     - path: data/prepare/y_train.csv
-      md5: b36631bdbb8580707bae861373742a95
-      size: 1345
+      md5: 7de8f31e9d854aee7616e53a209fb941
+      size: 1343
     - path: src/models/logistic_regression.py
       md5: e89227c75b0712e92177ae2557ae4fe7
       size: 1908
@@ -62,7 +66,7 @@ stages:
         train_logistic.random_state: 4
     outs:
     - path: data/models/logistic_regression.pkl
-      md5: 17398cec94b887f854e679bd397406cf
+      md5: d585d198ad86fa9943759517fb943667
       size: 794
   evaluate:
     cmd: python src/models/evaluate.py -x_test=data/prepare/x_test.csv -y_test=data/prepare/y_test.csv
@@ -70,21 +74,21 @@ stages:
       -plot_path=reports/plot.json
     deps:
     - path: data/models/logistic_regression.pkl
-      md5: 17398cec94b887f854e679bd397406cf
+      md5: d585d198ad86fa9943759517fb943667
       size: 794
     - path: data/prepare/x_test.csv
-      md5: cb5ca849e2fc0275e792fae6dee55e15
-      size: 11795
+      md5: 59b9904900bc7857fdd289065b01e10e
+      size: 11753
     - path: data/prepare/y_test.csv
-      md5: 7e71c744a293357f27168745b1f03ebe
+      md5: 44af50016fddb1b00ec2b7a56c0778f4
       size: 455
     - path: src/models/evaluate.py
       md5: 8bd1ac379e4b7ae6c73000de8b7e02b9
       size: 2954
     outs:
     - path: reports/plot.json
-      md5: bb64c17188f6d3077cafd79a614d2e6e
-      size: 6860
+      md5: ab53ff1c1640674e35cf9d25be7eaa5c
+      size: 6970
     - path: reports/scores.json
-      md5: 425e5b7305cfcbc6ec3e07d1459ae71e
+      md5: 0ae62428b0a0343d74bca472a47b2a0f
       size: 82

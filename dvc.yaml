@@ -1,9 +1,15 @@
 stages:
   prepare:
-    cmd: python src/data/prepare.py -path_origin=data/raw/train.csv -path_prepared=data/prepare/
+    cmd: python src/data/prepare.py 
+        -path_origin=data/raw/train.csv 
+        -path_prepared=data/prepare/
+        -data_metrics=reports/data_params_regression.json
     deps:
     - data/raw/train.csv
     - src/data/prepare.py
+    metrics:
+    - reports/data_params_regression.json:
+        cache: false
     outs:
     - data/prepare/data.csv
     - data/prepare/target.csv

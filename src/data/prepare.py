@@ -21,6 +21,7 @@ import os
 import argparse
 import pandas as pd
 import numpy as np
+import json
 from sklearn.impute import SimpleImputer
 
 
@@ -34,6 +35,10 @@ def get_args():
                  action="store",
                  dest="x_train",
                  required=True)
+    parser.add_argument('-data_metrics',
+                action="store",
+                dest="data_metrics",
+                required=True)
     args = parser.parse_args()
     return args
 
@@ -41,6 +46,7 @@ def get_args():
 def prepare(path_file: str) -> (pd.DataFrame, pd.DataFrame):
    
     train = pd.read_csv(path_file)
+    min = train.PassengerId.min()
 
     train_cat = list(train.select_dtypes(include='object'))
     train_num = list(train.select_dtypes(exclude='object'))
@@ -74,11 +80,15 @@ def prepare(path_file: str) -> (pd.DataFrame, pd.DataFrame):
     y=train['Survived']
     train.drop(['Survived'],axis=1,inplace=True)
 
-    return train, y
+    return train, y, min
 
 args = get_args()
-x_train, y_train = prepare(args.path_train)
+x_train, y_train, min = prepare(args.path_train)
 
 os.makedirs(os.path.join(args.x_train.split('/')[0], args.x_train.split('/')[1]), exist_ok=True)
 x_train.to_csv(f"{args.x_train}/data.csv", index=False)
 y_train.to_csv(f"{args.x_train}/target.csv", index=False)
+
+os.makedirs(os.path.join(args.data_metrics.split('/')[0]), exist_ok=True)
+with open(args.data_metrics, 'w') as fd:
+    json.dump(min, fd)
